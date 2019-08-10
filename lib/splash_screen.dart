@@ -7,7 +7,7 @@ class SplashScreen extends StatelessWidget {
       body: Center(
         child: RichText(
           text: TextSpan(
-            text:'JAM'
+            text:'JAMi'
           ),
         ),
       ),
