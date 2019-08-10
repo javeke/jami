@@ -1,7 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jam_i/side_drawer.dart';
+// import 'package:location/location.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,12 +11,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController _controller;
   ScrollController controller = ScrollController();
+  // Location location = Location();
 
-  static const LatLng _center = const LatLng(45.521563, -122.677433);
+  static const LatLng _center = const LatLng(18, -76.8);
 
-  final Set<Marker> _markers = {};
+  final Set<Marker> _markers = Set();
 
   LatLng _lastMapPosition = _center;
 
@@ -37,10 +38,13 @@ class _MyAppState extends State<MyApp> {
         markerId: MarkerId(_lastMapPosition.toString()),
         position: _lastMapPosition,
         infoWindow: InfoWindow(
-          title: 'Really cool place',
-          snippet: '5 Star Rating',
+          title: 'Wile Side Govament',
+          snippet: 'Bare gunman deh yah',
         ),
-        icon: BitmapDescriptor.defaultMarker,
+        icon: BitmapDescriptor.defaultMarkerWithHue(255),
+        onTap: (){
+          
+        }
       ));
     });
   }
@@ -50,7 +54,16 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
+    _controller = controller;
+  }
+
+  void _animateToPosition() async{
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(_center.latitude, _center.longitude),
+        zoom: 18
+      )
+    ));
   }
 
   @override
@@ -62,9 +75,9 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.deepPurple
       ),
       home: Scaffold(
-        drawer: Drawer(),
+        drawer: SideDrawer(),
         appBar: AppBar(
-          title: Text('JAMi'),
+          title: Text('Javi'),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.map,),
@@ -79,7 +92,81 @@ class _MyAppState extends State<MyApp> {
               itemBuilder: (context){
                 return [
                   PopupMenuItem(
-                    child: Text('yow'),
+                    value: 0,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.all_inclusive),
+                        SizedBox(width: 8,),
+                         Text('View All Incidents')
+                      ],
+                    )
+                  ),
+                  PopupMenuItem(
+                    value: 1,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.all_inclusive),
+                        SizedBox(width: 8,),
+                         Text('Missing Persons')
+                      ],
+                    )
+                  ),
+                  PopupMenuItem(
+                    value: 2,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.all_inclusive),
+                        SizedBox(width: 8,),
+                         Text('Rape')
+                      ],
+                    )
+                  ),
+                  PopupMenuItem(
+                    value: 3,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.all_inclusive),
+                        SizedBox(width: 8,),
+                         Text('Murder')
+                      ],
+                    )
+                  ),
+                  PopupMenuItem(
+                    value: 4,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.all_inclusive),
+                        SizedBox(width: 8,),
+                         Text('Larceny')
+                      ],
+                    )
+                  ),
+                  PopupMenuItem(
+                    value: 5,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.all_inclusive),
+                        SizedBox(width: 8,),
+                         Text('Gang Violence')
+                      ],
+                    )
+                  ),
+                  PopupMenuItem(
+                    value: 6,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.all_inclusive),
+                        SizedBox(width: 8,),
+                         Text('Road Accident')
+                      ],
+                    )
                   )
                 ];
               },
@@ -99,33 +186,21 @@ class _MyAppState extends State<MyApp> {
                 mapType: _currentMapType,
                 markers: _markers,
                 onCameraMove: _onCameraMove,
+                myLocationButtonEnabled: true,
+                myLocationEnabled: true,
               ),
             ),
-            // Positioned(
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(16.0),
-            //     child: Align(
-            //       alignment: Alignment.topRight,
-            //       child: Column(
-            //         children: <Widget> [
-            //           FloatingActionButton(
-            //             onPressed: _onMapTypeButtonPressed,
-            //             materialTapTargetSize: MaterialTapTargetSize.padded,
-            //             backgroundColor: Colors.green,
-            //             child: const Icon(Icons.map, size: 36.0),
-            //           ),
-            //           SizedBox(height: 16.0),
-            //           FloatingActionButton(
-            //             onPressed: _onAddMarkerButtonPressed,
-            //             materialTapTargetSize: MaterialTapTargetSize.padded,
-            //             backgroundColor: Colors.green,
-            //             child: const Icon(Icons.add_location, size: 36.0),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Positioned(
+              top: 10,
+              right: 10,
+              child: FlatButton(
+                child: Icon(
+                  Icons.person_pin,
+                  color: Colors.deepOrange,
+                ),
+                onPressed: _animateToPosition,
+              ),
+            ),
             Positioned(
               bottom: 10,
               left: 5,
