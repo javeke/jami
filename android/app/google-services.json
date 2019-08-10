@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "270615781082",
+    "firebase_url": "https://jami-4a1b0.firebaseio.com",
+    "project_id": "jami-4a1b0",
+    "storage_bucket": "jami-4a1b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270615781082:android:fc058b5324c790ba",
+        "android_client_info": {
+          "package_name": "com.example.jam_i"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270615781082-jhhga7p7jpvi6qa3bg3ltsalqbib71j0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT8GhGLPSIKj2OkJU_8zkwGLqm4JRyoIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270615781082-jhhga7p7jpvi6qa3bg3ltsalqbib71j0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
