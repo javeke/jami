@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jam_i/side_drawer.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:location/location.dart';
 
 void main() => runApp(MyApp());
@@ -13,6 +14,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   GoogleMapController _controller;
   ScrollController controller = ScrollController();
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   // Location location = Location();
 
   static const LatLng _center = const LatLng(18, -76.8);
@@ -66,18 +68,40 @@ class _MyAppState extends State<MyApp> {
     ));
   }
 
+  
+  void initializeFCM()async{
+    firebaseMessaging.configure(
+      onMessage: (message)async{
+        print(message);
+      },
+      onLaunch: (notification) async{
+        print(notification);
+      },
+      onResume: (notification)async{
+        print(notification);
+      }
+    );  
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeFCM();
+    firebaseMessaging.getToken().then((token){
+      print(token);
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      darkTheme: ThemeData(
-        primarySwatch: Colors.deepPurple
-      ),
       home: Scaffold(
         drawer: SideDrawer(),
         appBar: AppBar(
-          title: Text('Javi'),
+          title: Text('JAMi'),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.map,),
@@ -107,7 +131,7 @@ class _MyAppState extends State<MyApp> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(Icons.all_inclusive),
+                        Icon(Icons.person_pin_circle),
                         SizedBox(width: 8,),
                          Text('Missing Persons')
                       ],
@@ -118,7 +142,7 @@ class _MyAppState extends State<MyApp> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(Icons.all_inclusive),
+                        Icon(Icons.accessible_forward),
                         SizedBox(width: 8,),
                          Text('Rape')
                       ],
@@ -129,7 +153,7 @@ class _MyAppState extends State<MyApp> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(Icons.all_inclusive),
+                        Icon(Icons.accessibility_new),
                         SizedBox(width: 8,),
                          Text('Murder')
                       ],
@@ -140,7 +164,7 @@ class _MyAppState extends State<MyApp> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(Icons.all_inclusive),
+                        Icon(Icons.tag_faces),
                         SizedBox(width: 8,),
                          Text('Larceny')
                       ],
@@ -151,7 +175,7 @@ class _MyAppState extends State<MyApp> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(Icons.all_inclusive),
+                        Icon(Icons.gavel),
                         SizedBox(width: 8,),
                          Text('Gang Violence')
                       ],
@@ -162,7 +186,7 @@ class _MyAppState extends State<MyApp> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(Icons.all_inclusive),
+                        Icon(Icons.local_car_wash),
                         SizedBox(width: 8,),
                          Text('Road Accident')
                       ],
