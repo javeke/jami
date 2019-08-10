@@ -12,7 +12,7 @@ class UserInfo extends StatefulWidget {
 class UserInfoState extends State<UserInfo> {
   final Map userinfo;
   String type;
-  String descrition;
+  String details;
   bool threatlevel = false;
   UserInfoState({@required this.userinfo});
 
@@ -59,7 +59,7 @@ class UserInfoState extends State<UserInfo> {
   }
 
   void adddata(){
-    List userdata = [type,  descrition, threatlevel];
+    List userdata = [type,  details, threatlevel];
     Navigator.pop(context, userdata);
     
   }
@@ -143,7 +143,9 @@ class UserInfoState extends State<UserInfo> {
                   contentPadding: EdgeInsets.all(14.0),
                   border: OutlineInputBorder()),
               onChanged: (string) {
-                setState(() {});
+                setState(() {
+                  details = string;
+                });
               },
             ),
           ),
