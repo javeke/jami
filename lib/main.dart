@@ -170,8 +170,8 @@ class _MyAppState extends State<MyApp> {
                     shape: StadiumBorder(),
                     color: Colors.deepOrange,
                     child: Text('Report'),
-onPressed: () {
-  Navigator.push(
+onPressed: () async {
+  List markdata = await Navigator.push(
     context,
     MaterialPageRoute(builder: (BuildContext context) { return UserInfo(userinfo: null,); }));
 

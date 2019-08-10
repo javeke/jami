@@ -12,6 +12,7 @@ class UserInfo extends StatefulWidget {
 class UserInfoState extends State<UserInfo> {
   final Map userinfo;
   String type;
+  String descrition;
   bool threatlevel = false;
   UserInfoState({@required this.userinfo});
 
@@ -57,12 +58,24 @@ class UserInfoState extends State<UserInfo> {
     _controller.complete(controller);
   }
 
+  void adddata(){
+    List userdata = [type,  descrition, threatlevel];
+    Navigator.pop(context, userdata);
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[IconButton(
+          icon: Icon(Icons.check),
+          onPressed: (){
+            adddata();
+          },
+        )],
           //backgroundColor: Color,
           title: Text(
         'New Alert',
