@@ -2,8 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jam_i/createalert.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(App());
+
+class App extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MyApp(),
+    );
+  }
+
+
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -58,25 +72,30 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      darkTheme: ThemeData(
-        primarySwatch: Colors.deepPurple
-      ),
+      darkTheme: ThemeData(primarySwatch: Colors.deepPurple),
       home: Scaffold(
         drawer: Drawer(),
         appBar: AppBar(
           title: Text('JAMi'),
+          centerTitle: true,
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.map,),
+              color: Color(0xFF00ADEF),
+              icon: Icon(
+                Icons.map,
+              ),
               onPressed: _onMapTypeButtonPressed,
             ),
             IconButton(
-              icon: Icon(Icons.add_location,),
+              color: Color(0xFF00ADEF),
+              icon: Icon(
+                Icons.add_location,
+              ),
               onPressed: _onAddMarkerButtonPressed,
             ),
             PopupMenuButton(
               icon: Icon(Icons.arrow_drop_down),
-              itemBuilder: (context){
+              itemBuilder: (context) {
                 return [
                   PopupMenuItem(
                     child: Text('yow'),
@@ -86,11 +105,13 @@ class _MyAppState extends State<MyApp> {
             )
           ],
         ),
-        body: Stack(
+        body: 
+        Stack(
           children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              child: GoogleMap(
+              child:
+        GoogleMap(
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: CameraPosition(
                   target: LatLng(18, -76.8),
@@ -135,28 +156,31 @@ class _MyAppState extends State<MyApp> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   FlatButton(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 50
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 50),
                     color: Colors.deepPurple,
                     shape: StadiumBorder(),
                     child: Text('Recent'),
-                    onPressed: (){},
+                    onPressed: () {},
                   ),
-                  SizedBox(width: 20,),
+                  SizedBox(
+                    width: 20,
+                  ),
                   FlatButton(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 50
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 50),
                     shape: StadiumBorder(),
                     color: Colors.deepOrange,
                     child: Text('Report'),
-                    onPressed: (){},
+onPressed: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (BuildContext context) { return UserInfo(userinfo: null,); }));
+
+}
                   )
                 ],
               ),
             )
-          ],
+         ],
         ),
       ),
     );
