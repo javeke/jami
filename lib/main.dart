@@ -56,22 +56,44 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
+      darkTheme: ThemeData(
+        primarySwatch: Colors.deepPurple
+      ),
       home: Scaffold(
+        drawer: Drawer(),
         appBar: AppBar(
-          title: Text('Maps Sample App'),
-          backgroundColor: Colors.green[700],
+          title: Text('JAMi'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.map,),
+              onPressed: _onMapTypeButtonPressed,
+            ),
+            IconButton(
+              icon: Icon(Icons.add_location,),
+              onPressed: _onAddMarkerButtonPressed,
+            ),
+            PopupMenuButton(
+              icon: Icon(Icons.arrow_drop_down),
+              itemBuilder: (context){
+                return [
+                  PopupMenuItem(
+                    child: Text('yow'),
+                  )
+                ];
+              },
+            )
+          ],
         ),
         body: Stack(
           children: <Widget>[
-            Positioned(
-              top: 0,
-              height: 200,
-              width: 400,
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
               child: GoogleMap(
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: CameraPosition(
-                  target: _center,
+                  target: LatLng(18, -76.8),
                   zoom: 11.0,
                 ),
                 mapType: _currentMapType,
@@ -79,48 +101,59 @@ class _MyAppState extends State<MyApp> {
                 onCameraMove: _onCameraMove,
               ),
             ),
+            // Positioned(
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(16.0),
+            //     child: Align(
+            //       alignment: Alignment.topRight,
+            //       child: Column(
+            //         children: <Widget> [
+            //           FloatingActionButton(
+            //             onPressed: _onMapTypeButtonPressed,
+            //             materialTapTargetSize: MaterialTapTargetSize.padded,
+            //             backgroundColor: Colors.green,
+            //             child: const Icon(Icons.map, size: 36.0),
+            //           ),
+            //           SizedBox(height: 16.0),
+            //           FloatingActionButton(
+            //             onPressed: _onAddMarkerButtonPressed,
+            //             materialTapTargetSize: MaterialTapTargetSize.padded,
+            //             backgroundColor: Colors.green,
+            //             child: const Icon(Icons.add_location, size: 36.0),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Positioned(
-              bottom: 100,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Column(
-                    children: <Widget> [
-                      FloatingActionButton(
-                        onPressed: _onMapTypeButtonPressed,
-                        materialTapTargetSize: MaterialTapTargetSize.padded,
-                        backgroundColor: Colors.green,
-                        child: const Icon(Icons.map, size: 36.0),
-                      ),
-                      SizedBox(height: 16.0),
-                      FloatingActionButton(
-                        onPressed: _onAddMarkerButtonPressed,
-                        materialTapTargetSize: MaterialTapTargetSize.padded,
-                        backgroundColor: Colors.green,
-                        child: const Icon(Icons.add_location, size: 36.0),
-                      ),
-                    ],
+              bottom: 10,
+              left: 5,
+              right: 5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  FlatButton(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 50
+                    ),
+                    color: Colors.deepPurple,
+                    shape: StadiumBorder(),
+                    child: Text('Recent'),
+                    onPressed: (){},
                   ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 200,
-              height: 500,
-              width: 400,
-              child: ListView.builder(
-                controller: controller,
-                itemCount: 5,
-                itemBuilder: (context, index){
-                  return ListTile(
-                    title: Text('Rape'),
-                    subtitle: Text('A woman raped a man'),
-                    onTap: (){
-                      print(index);
-                    },
-                  );
-                },
+                  SizedBox(width: 20,),
+                  FlatButton(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 50
+                    ),
+                    shape: StadiumBorder(),
+                    color: Colors.deepOrange,
+                    child: Text('Report'),
+                    onPressed: (){},
+                  )
+                ],
               ),
             )
           ],
