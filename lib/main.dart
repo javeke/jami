@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         drawer: Drawer(),
         appBar: AppBar(
-          title: Text('JAMi'),
+          title: Text('JAM i'),
           centerTitle: true,
           actions: <Widget>[
             IconButton(

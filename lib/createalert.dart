@@ -6,14 +6,16 @@ import 'dart:async';
 class UserInfo extends StatefulWidget {
   final Map userinfo;
   UserInfo({@required this.userinfo});
- UserInfoState createState() => UserInfoState(userinfo: userinfo);
+  UserInfoState createState() => UserInfoState(userinfo: userinfo);
 }
 
 class UserInfoState extends State<UserInfo> {
   final Map userinfo;
+  String type;
+  bool threatlevel = false;
   UserInfoState({@required this.userinfo});
 
- Completer<GoogleMapController> _controller = Completer();
+  Completer<GoogleMapController> _controller = Completer();
   ScrollController controller = ScrollController();
 
   static const LatLng _center = const LatLng(45.521563, -122.677433);
@@ -57,43 +59,99 @@ class UserInfoState extends State<UserInfo> {
 
   @override
   Widget build(BuildContext context) {
-    var height =  MediaQuery.of(context).size.height;
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        //backgroundColor: Color,
+          //backgroundColor: Color,
           title: Text(
-        'Profile',
-        style: TextStyle( fontSize: 20.0),
+        'New Alert',
+        style: TextStyle(fontSize: 20.0),
       )),
-      body: Column(
+      body: ListView(
         children: <Widget>[
           Container(
-            height: height*.4,
-            child:
-                    GoogleMap(
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(18, -76.8),
-                  zoom: 11.0,
-                ),
-                mapType: _currentMapType,
-                markers: _markers,
-                onCameraMove: _onCameraMove,
+            height: height * .4,
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(18, -76.8),
+                zoom: 11.0,
               ),
+              mapType: _currentMapType,
+              markers: _markers,
+              onCameraMove: _onCameraMove,
+            ),
           ),
-SizedBox(height: 10,),
- TextField(
+          Padding(
+            padding: EdgeInsets.all(14.0),
+            child: Card(
+              child: DropdownButton<String>(
+                hint: Text(
+                  "   Please select an Alert Type!",
+                  style: TextStyle(
+                    color: Colors.black54,
+                  ),
+                ),
+                items: [
+                  DropdownMenuItem<String>(
+                    value: "1",
+                    child: Text(
+                      "First",
+                    ),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: "2",
+                    child: Text(
+                      "Second",
+                    ),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    type = value;
+                  });
+                },
+                value: type,
+                elevation: 4,
+                style: TextStyle(color: Colors.black54, fontSize: 15),
+                isDense: true,
+                iconSize: 40.0,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(14.0),
+            child: TextField(
               autocorrect: true,
+              maxLines: 4,
               decoration: InputDecoration(
-                  labelText: "Title...",
+                  labelText: "Details...",
                   contentPadding: EdgeInsets.all(14.0),
                   border: OutlineInputBorder()),
               onChanged: (string) {
-                setState(() {
-                });
+                setState(() {});
               },
-
-            
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(14.0),
+            child: Row(children: [
+              Text(
+                "   Threat Level",
+                style: TextStyle(
+                  color: Colors.black54,
+                ),
+              ),
+              SizedBox(width: width*.45,),
+              Switch(
+                  value: threatlevel,
+                  onChanged: (value) {
+                    setState(() {
+                      threatlevel = value;
+                    });
+                  })
+            ]),
           ),
         ],
       ),
