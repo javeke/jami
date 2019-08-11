@@ -11,11 +11,15 @@ class UserInfo extends StatefulWidget {
 
 class UserInfoState extends State<UserInfo> {
   final Map userinfo;
-  String type;
+  String displaytext = "Alert Type";
+  String details = "";
+  String type = "";
+  var location;
   bool threatlevel = false;
   UserInfoState({@required this.userinfo});
 
-  Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController _controller;
+  //Completer<GoogleMapController> _controller = Completer();
   ScrollController controller = ScrollController();
 
   static const LatLng _center = const LatLng(45.521563, -122.677433);
@@ -32,6 +36,11 @@ class UserInfoState extends State<UserInfo> {
           ? MapType.satellite
           : MapType.normal;
     });
+  }
+
+  void _animateToPosition() async {
+    _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(_center.latitude, _center.longitude), zoom: 18)));
   }
 
   void _onAddMarkerButtonPressed() {
@@ -54,7 +63,12 @@ class UserInfoState extends State<UserInfo> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
+    _controller = controller;
+  }
+
+  void senddata() {
+    List alertdata = [details, type, threatlevel, location];
+    Navigator.pop(context, alertdata);
   }
 
   @override
@@ -63,11 +77,19 @@ class UserInfoState extends State<UserInfo> {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-          //backgroundColor: Color,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.check),
+              onPressed: () {
+                senddata();
+              },
+            )
+          ],
+          backgroundColor: Color(0xFF00ADEF),
           title: Text(
-        'New Alert',
-        style: TextStyle(fontSize: 20.0),
-      )),
+            'New Alert',
+            style: TextStyle(fontSize: 20.0),
+          )),
       body: ListView(
         children: <Widget>[
           Container(
@@ -86,39 +108,29 @@ class UserInfoState extends State<UserInfo> {
           Padding(
             padding: EdgeInsets.all(14.0),
             child: Card(
-              child: DropdownButton<String>(
-                hint: Text(
-                  "   Please select an Alert Type!",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
-                ),
-                items: [
-                  DropdownMenuItem<String>(
-                    value: "1",
-                    child: Text(
-                      "First",
-                    ),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: "2",
-                    child: Text(
-                      "Second",
-                    ),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    type = value;
-                  });
-                },
-                value: type,
-                elevation: 4,
-                style: TextStyle(color: Colors.black54, fontSize: 15),
-                isDense: true,
-                iconSize: 40.0,
-              ),
-            ),
+                child: DropdownButton<String>(
+              hint: Text(displaytext),
+              items: <String>[
+                '    Missing Persons',
+                '    Rape',
+                '    Murder',
+                '    Larceny',
+                '    Gang Voilence',
+                '    Road Accident'
+              ].map((String value) {
+                return new DropdownMenuItem<String>(
+                  value: value,
+                  child: new Text(value),
+                );
+              }).toList(),
+              onChanged: (_) {
+                setState(() {
+                displaytext = _;  
+                });
+                
+                type = _;
+              },
+            )),
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
@@ -143,7 +155,9 @@ class UserInfoState extends State<UserInfo> {
                   color: Colors.black54,
                 ),
               ),
-              SizedBox(width: width*.45,),
+              SizedBox(
+                width: width * .35,
+              ),
               Switch(
                   value: threatlevel,
                   onChanged: (value) {

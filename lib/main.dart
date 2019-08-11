@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-<<<<<<< HEAD
 import 'package:jam_i/createalert.dart';
-=======
 import 'package:jam_i/side_drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:location/location.dart';
->>>>>>> temp
 
 void main() => runApp(App());
 
 class App extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyApp(),
     );
   }
-
-
 }
 
 class MyApp extends StatefulWidget {
@@ -115,10 +109,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-<<<<<<< HEAD
-      darkTheme: ThemeData(primarySwatch: Colors.deepPurple),
-=======
->>>>>>> temp
       home: Scaffold(
         drawer: SideDrawer(),
         appBar: AppBar(
@@ -192,7 +182,7 @@ class _MyAppState extends State<MyApp> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Icon(Icons.tag_faces),
+                        Icon(Icons.face),
                         SizedBox(width: 8,),
                          Text('Larceny')
                       ],
