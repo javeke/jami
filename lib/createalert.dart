@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:async';
-
 class UserInfo extends StatefulWidget {
   final Map userinfo;
   UserInfo({@required this.userinfo});
@@ -15,46 +13,23 @@ class UserInfoState extends State<UserInfo> {
   bool threatlevel = false;
   UserInfoState({@required this.userinfo});
 
-  Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController _controller;
   ScrollController controller = ScrollController();
 
   static const LatLng _center = const LatLng(45.521563, -122.677433);
 
-  final Set<Marker> _markers = {};
+  final Set<Marker> _markers = Set();
 
   LatLng _lastMapPosition = _center;
 
   MapType _currentMapType = MapType.normal;
-
-  void _onMapTypeButtonPressed() {
-    setState(() {
-      _currentMapType = _currentMapType == MapType.normal
-          ? MapType.satellite
-          : MapType.normal;
-    });
-  }
-
-  void _onAddMarkerButtonPressed() {
-    setState(() {
-      _markers.add(Marker(
-        // This marker id can be anything that uniquely identifies each marker.
-        markerId: MarkerId(_lastMapPosition.toString()),
-        position: _lastMapPosition,
-        infoWindow: InfoWindow(
-          title: 'Really cool place',
-          snippet: '5 Star Rating',
-        ),
-        icon: BitmapDescriptor.defaultMarker,
-      ));
-    });
-  }
 
   void _onCameraMove(CameraPosition position) {
     _lastMapPosition = position.target;
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
+    _controller = controller;
   }
 
   @override
@@ -63,8 +38,7 @@ class UserInfoState extends State<UserInfo> {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-          //backgroundColor: Color,
-          title: Text(
+      title: Text(
         'New Alert',
         style: TextStyle(fontSize: 20.0),
       )),
@@ -86,24 +60,45 @@ class UserInfoState extends State<UserInfo> {
           Padding(
             padding: EdgeInsets.all(14.0),
             child: Card(
-              child: DropdownButton<String>(
+              child: DropdownButton(
                 hint: Text(
-                  "   Please select an Alert Type!",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
+                  "Please select an Alert Type!",
                 ),
                 items: [
-                  DropdownMenuItem<String>(
-                    value: "1",
+                  DropdownMenuItem(
+                    value: 0,
                     child: Text(
-                      "First",
+                      "Abduction",
                     ),
                   ),
-                  DropdownMenuItem<String>(
-                    value: "2",
+                  DropdownMenuItem(
+                    value: 1,
                     child: Text(
-                      "Second",
+                      "Assault",
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 2,
+                    child: Text(
+                      "Murder",
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 3,
+                    child: Text(
+                      "Larceny",
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 4,
+                    child: Text(
+                      "Gang Violence",
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 5,
+                    child: Text(
+                      "Road Accident",
                     ),
                   ),
                 ],
@@ -114,7 +109,7 @@ class UserInfoState extends State<UserInfo> {
                 },
                 value: type,
                 elevation: 4,
-                style: TextStyle(color: Colors.black54, fontSize: 15),
+                style: TextStyle( fontSize: 15),
                 isDense: true,
                 iconSize: 40.0,
               ),
@@ -127,6 +122,9 @@ class UserInfoState extends State<UserInfo> {
               maxLines: 4,
               decoration: InputDecoration(
                   labelText: "Details...",
+                  labelStyle: TextStyle(
+                    color: Colors.white
+                  ),
                   contentPadding: EdgeInsets.all(14.0),
                   border: OutlineInputBorder()),
               onChanged: (string) {
@@ -136,22 +134,32 @@ class UserInfoState extends State<UserInfo> {
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
-            child: Row(children: [
-              Text(
-                "  High Threat Level",
-                style: TextStyle(
-                  color: Colors.black54,
-                ),
+            child: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 0.5, color: Colors.white),
+                  right: BorderSide(width: 0.5, color: Colors.white),
+                  bottom: BorderSide(width: 0.5, color: Colors.white),
+                  left: BorderSide(width: 0.5, color: Colors.white)
+                )
               ),
-              SizedBox(width: width*.45,),
-              Switch(
-                  value: threatlevel,
-                  onChanged: (value) {
-                    setState(() {
-                      threatlevel = value;
-                    });
-                  })
-            ]),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                Text(
+                  "  High Threat Level",
+                ),
+                SizedBox(width: width*.3,),
+                Switch(
+                    value: threatlevel,
+                    onChanged: (value) {
+                      setState(() {
+                        threatlevel = value;
+                      });
+                    })
+              ]),
+            ),
           ),
         ],
       ),

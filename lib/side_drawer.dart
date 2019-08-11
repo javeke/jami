@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'about.dart';
+
 class SideDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,14 @@ class SideDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.access_time),
             title: Text('About'),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder:(context)=> About()
+                )
+              );
+            },
           )
         ],
       ),
