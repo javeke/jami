@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SideDrawer extends StatelessWidget {
+class SideDrawer extends StatefulWidget {
+
+  SideDrawerState createState() => SideDrawerState();
+}
+
+class SideDrawerState extends State<SideDrawer> {
+bool livealert = false;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -8,15 +14,18 @@ class SideDrawer extends StatelessWidget {
         children: <Widget>[
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text('Settings'),
+            title: Text('Options'),
           ),
           ListTile(
             leading: Icon(Icons.access_alarm),
-            title: Text('Manage Alerts'),
-          ),
-          ListTile(
-            leading: Icon(Icons.add_location),
-            title: Text('Set Default Location'),
+            title: Text('Live Alerts'),
+            trailing: Switch(
+                  value: livealert,
+                  onChanged: (value) {
+                    setState(() {
+                      livealert = value;
+                    });
+                  }),
           ),
           ListTile(
             leading: Icon(Icons.access_time),

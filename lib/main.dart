@@ -112,8 +112,8 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         drawer: SideDrawer(),
         appBar: AppBar(
-          title: Text('JAM i'),
-          centerTitle: true,
+          title: Text('JAM i',
+          ),
           actions: <Widget>[
             IconButton(
               color: Color(0xFF00ADEF),
