@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'about.dart';
 
 class SideDrawer extends StatefulWidget {
 
@@ -7,6 +8,7 @@ class SideDrawer extends StatefulWidget {
 
 class SideDrawerState extends State<SideDrawer> {
 bool livealert = false;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,6 +32,14 @@ bool livealert = false;
           ListTile(
             leading: Icon(Icons.access_time),
             title: Text('About'),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder:(context)=> About()
+                )
+              );
+            },
           )
         ],
       ),
