@@ -55,6 +55,19 @@ class _MyAppState extends State<MyApp> {
         infoWindow: InfoWindow(
           title: 'Wile Side Govament',
           snippet: 'Bare gunman deh yah',
+          onTap: (){
+              showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+    title: Text("AlertDialog"),
+    content: Text("Would you like to continue learning how to use Flutter alerts?"),
+
+  );
+    },
+  );
+
+          },
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(255),
       ));
