@@ -280,7 +280,8 @@ class _MyAppState extends State<MyApp> {
               myLocationButtonEnabled: true,
               myLocationEnabled: true,
             ),
-            Positioned(
+          ),
+        Positioned(
           top: 30.0,
           right: 15.0,
           left: 15.0,
