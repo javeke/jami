@@ -13,7 +13,18 @@ class UserInfoState extends State<UserInfo> {
   String displaytext = "Alert Type";
   String details = "";
   String type = "";
+
+  Map defaultstrs = {
+                'Abduction' :'somebody got stolen',
+                'Assault': 'sombody got assaulted',
+                'Murder': 'persons were shot to death',
+                'Larceny': 'property was burned to the ground',
+                'Gang Voilence': 'guys fighting over who knows what',
+                'Road Issues':'trafic backed up in this area',
+  };
+
   LatLng location;
+
   bool threatlevel = false;
   UserInfoState({@required this.userinfo});
 
@@ -95,6 +106,9 @@ class UserInfoState extends State<UserInfo> {
       return;
     }
     List alertdata = [details, type, threatlevel, location];
+    if (details == '' && type != ''){
+      details = defaultstrs[type];
+    };
     Navigator.pop(context, alertdata);
   }
 
