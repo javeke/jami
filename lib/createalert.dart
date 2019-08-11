@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:async';
-
 class UserInfo extends StatefulWidget {
   final Map userinfo;
   UserInfo({@required this.userinfo});
@@ -19,7 +17,6 @@ class UserInfoState extends State<UserInfo> {
   UserInfoState({@required this.userinfo});
 
   GoogleMapController _controller;
-  //Completer<GoogleMapController> _controller = Completer();
   ScrollController controller = ScrollController();
 
   static const LatLng _center = const LatLng(45.521563, -122.677433);
@@ -146,6 +143,9 @@ class UserInfoState extends State<UserInfo> {
               maxLines: 4,
               decoration: InputDecoration(
                   labelText: "Details...",
+                  labelStyle: TextStyle(
+                    color: Colors.white
+                  ),
                   contentPadding: EdgeInsets.all(14.0),
                   border: OutlineInputBorder()),
               onChanged: (string) {
