@@ -1,8 +1,7 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:async';
-
 class UserInfo extends StatefulWidget {
   final Map userinfo;
   UserInfo({@required this.userinfo});
@@ -11,16 +10,19 @@ class UserInfo extends StatefulWidget {
 
 class UserInfoState extends State<UserInfo> {
   final Map userinfo;
-  String type;
+  String displaytext = "Alert Type";
+  String details = "";
+  String type = "";
+  LatLng location;
   bool threatlevel = false;
   UserInfoState({@required this.userinfo});
 
-  Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController _controller;
   ScrollController controller = ScrollController();
 
   static const LatLng _center = const LatLng(45.521563, -122.677433);
 
-  final Set<Marker> _markers = {};
+  Set<Marker> _marker = Set();
 
   LatLng _lastMapPosition = _center;
 
@@ -34,18 +36,25 @@ class UserInfoState extends State<UserInfo> {
     });
   }
 
-  void _onAddMarkerButtonPressed() {
+  void _animateToPosition() async {
+    _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(_center.latitude, _center.longitude), zoom: 18)));
+  }
+
+  void _onlocationPressed(LatLng selected) {
     setState(() {
-      _markers.add(Marker(
-        // This marker id can be anything that uniquely identifies each marker.
-        markerId: MarkerId(_lastMapPosition.toString()),
-        position: _lastMapPosition,
-        infoWindow: InfoWindow(
-          title: 'Really cool place',
-          snippet: '5 Star Rating',
-        ),
-        icon: BitmapDescriptor.defaultMarker,
-      ));
+      _marker = {
+        Marker(
+          // This marker id can be anything that uniquely identifies each marker.
+          markerId: MarkerId(_lastMapPosition.toString()),
+          position: selected,
+          infoWindow: InfoWindow(
+            title: 'Really cool place',
+            snippet: '5 Star Rating',
+          ),
+          icon: BitmapDescriptor.defaultMarker,
+        )
+      };
     });
   }
 
@@ -54,7 +63,39 @@ class UserInfoState extends State<UserInfo> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
+    _controller = controller;
+  }
+
+  void senddata() {
+    if(location==null){
+      Flushbar(
+        backgroundColor: Colors.deepOrange,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        messageText: Text('No location was selected'),
+      )..show(context);
+      return;
+    }
+    else if(type==null){
+      Flushbar(
+        backgroundColor: Colors.deepOrange,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        messageText: Text('Please select incident type'),
+      )..show(context);
+      return;
+    }
+    else if(details==null){
+      Flushbar(
+        backgroundColor: Colors.deepOrange,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        messageText: Text('Please add some incident details'),
+      )..show(context);
+      return;
+    }
+    List alertdata = [details, type, threatlevel, location];
+    Navigator.pop(context, alertdata);
   }
 
   @override
@@ -63,62 +104,64 @@ class UserInfoState extends State<UserInfo> {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-          //backgroundColor: Color,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.check),
+              onPressed: () {
+                senddata();
+              },
+            )
+          ],
           title: Text(
-        'New Alert',
-        style: TextStyle(fontSize: 20.0),
-      )),
+            'New Alert',
+            style: TextStyle(fontSize: 20.0),
+          )),
       body: ListView(
         children: <Widget>[
           Container(
             height: height * .4,
             child: GoogleMap(
+              onTap: (tapped) {
+                location = tapped;
+                _onlocationPressed(tapped);
+              },
+              myLocationButtonEnabled: true,
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: LatLng(18, -76.8),
                 zoom: 11.0,
               ),
               mapType: _currentMapType,
-              markers: _markers,
+              markers: _marker,
               onCameraMove: _onCameraMove,
             ),
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
             child: Card(
-              child: DropdownButton<String>(
-                hint: Text(
-                  "   Please select an Alert Type!",
-                  style: TextStyle(
-                    color: Colors.black54,
-                  ),
-                ),
-                items: [
-                  DropdownMenuItem<String>(
-                    value: "1",
-                    child: Text(
-                      "First",
-                    ),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: "2",
-                    child: Text(
-                      "Second",
-                    ),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    type = value;
-                  });
-                },
-                value: type,
-                elevation: 4,
-                style: TextStyle(color: Colors.black54, fontSize: 15),
-                isDense: true,
-                iconSize: 40.0,
-              ),
-            ),
+                child: DropdownButton<String>(
+              hint: Text(displaytext),
+              items: <String>[
+                'Abduction',
+                'Assault',
+                'Murder',
+                'Larceny',
+                'Gang Voilence',
+                'Road Issues'
+              ].map((String value) {
+                return new DropdownMenuItem<String>(
+                  value: value,
+                  child: new Text(value),
+                );
+              }).toList(),
+              onChanged: (_) {
+                setState(() {
+                  displaytext = _;
+                });
+
+                type = _;
+              },
+            )),
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
@@ -127,31 +170,30 @@ class UserInfoState extends State<UserInfo> {
               maxLines: 4,
               decoration: InputDecoration(
                   labelText: "Details...",
+                  labelStyle: TextStyle(
+                    color: Colors.white
+                  ),
                   contentPadding: EdgeInsets.all(14.0),
                   border: OutlineInputBorder()),
               onChanged: (string) {
-                setState(() {});
+                setState(() {
+                  details = string;
+                });
               },
             ),
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
-            child: Row(children: [
-              Text(
-                "  High Threat Level",
-                style: TextStyle(
-                  color: Colors.black54,
-                ),
-              ),
-              SizedBox(width: width*.45,),
-              Switch(
+            child: ListTile(leading:
+              Text( "High Threat Level"),
+              trailing: Switch(
                   value: threatlevel,
                   onChanged: (value) {
                     setState(() {
                       threatlevel = value;
                     });
                   })
-            ]),
+            ),
           ),
         ],
       ),
