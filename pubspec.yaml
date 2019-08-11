@@ -27,7 +27,7 @@ dependencies:
   firebase_core:
   firebase_messaging:
   geolocator: 1.6.3
-  flushbar:
+  flushbar: '1.5.3'
   cloud_firestore:
 
 dev_dependencies:
