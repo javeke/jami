@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-<<<<<<< HEAD
 import 'package:jam_i/createalert.dart';
-=======
+
 import 'package:jam_i/side_drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:location/location.dart';
->>>>>>> temp
+
 
 void main() => runApp(App());
 
@@ -115,10 +114,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-<<<<<<< HEAD
-      darkTheme: ThemeData(primarySwatch: Colors.deepPurple),
-=======
->>>>>>> temp
       home: Scaffold(
         drawer: SideDrawer(),
         appBar: AppBar(
