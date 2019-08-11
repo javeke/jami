@@ -151,7 +151,7 @@ class _MyAppState extends State<MyApp> {
                       children: <Widget>[
                         Icon(Icons.person_pin_circle),
                         SizedBox(width: 8,),
-                         Text('Missing Persons')
+                         Text('Abduction')
                       ],
                     )
                   ),
@@ -162,7 +162,7 @@ class _MyAppState extends State<MyApp> {
                       children: <Widget>[
                         Icon(Icons.accessible_forward),
                         SizedBox(width: 8,),
-                         Text('Rape')
+                         Text('Assault')
                       ],
                     )
                   ),

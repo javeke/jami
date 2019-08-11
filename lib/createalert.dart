@@ -11,7 +11,7 @@ class UserInfo extends StatefulWidget {
 
 class UserInfoState extends State<UserInfo> {
   final Map userinfo;
-  String displaytext = "Alert Type";
+  String displaytext = "   Alert Type";
   String details = "";
   String type = "";
   var location;
@@ -24,7 +24,7 @@ class UserInfoState extends State<UserInfo> {
 
   static const LatLng _center = const LatLng(45.521563, -122.677433);
 
-  final Set<Marker> _markers = {};
+  Set<Marker> _marker = {};
 
   LatLng _lastMapPosition = _center;
 
@@ -43,18 +43,20 @@ class UserInfoState extends State<UserInfo> {
         target: LatLng(_center.latitude, _center.longitude), zoom: 18)));
   }
 
-  void _onAddMarkerButtonPressed() {
+  void _onlocationPressed(LatLng selected) {
     setState(() {
-      _markers.add(Marker(
-        // This marker id can be anything that uniquely identifies each marker.
-        markerId: MarkerId(_lastMapPosition.toString()),
-        position: _lastMapPosition,
-        infoWindow: InfoWindow(
-          title: 'Really cool place',
-          snippet: '5 Star Rating',
-        ),
-        icon: BitmapDescriptor.defaultMarker,
-      ));
+      _marker = {
+        Marker(
+          // This marker id can be anything that uniquely identifies each marker.
+          markerId: MarkerId(_lastMapPosition.toString()),
+          position: selected,
+          infoWindow: InfoWindow(
+            title: 'Really cool place',
+            snippet: '5 Star Rating',
+          ),
+          icon: BitmapDescriptor.defaultMarker,
+        )
+      };
     });
   }
 
@@ -95,13 +97,18 @@ class UserInfoState extends State<UserInfo> {
           Container(
             height: height * .4,
             child: GoogleMap(
+              onTap: (tapped) {
+                location = tapped;
+                _onlocationPressed(tapped);
+              },
+              myLocationButtonEnabled: true,
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: LatLng(18, -76.8),
                 zoom: 11.0,
               ),
               mapType: _currentMapType,
-              markers: _markers,
+              markers: _marker,
               onCameraMove: _onCameraMove,
             ),
           ),
@@ -111,12 +118,12 @@ class UserInfoState extends State<UserInfo> {
                 child: DropdownButton<String>(
               hint: Text(displaytext),
               items: <String>[
-                '    Missing Persons',
-                '    Rape',
+                '    Abduction',
+                '    Assault',
                 '    Murder',
                 '    Larceny',
                 '    Gang Voilence',
-                '    Road Accident'
+                '    Road Issues'
               ].map((String value) {
                 return new DropdownMenuItem<String>(
                   value: value,
@@ -125,16 +132,16 @@ class UserInfoState extends State<UserInfo> {
               }).toList(),
               onChanged: (_) {
                 setState(() {
-                displaytext = _;  
+                  displaytext = _;
                 });
-                
+
                 type = _;
               },
             )),
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
-            child: TextField(
+                        child: TextField(
               autocorrect: true,
               maxLines: 4,
               decoration: InputDecoration(
@@ -148,24 +155,20 @@ class UserInfoState extends State<UserInfo> {
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
-            child: Row(children: [
-              Text(
-                "  High Threat Level",
+            child: ListTile(leading:
+              Text( "  High Threat Level",
                 style: TextStyle(
                   color: Colors.black54,
                 ),
               ),
-              SizedBox(
-                width: width * .35,
-              ),
-              Switch(
+              trailing: Switch(
                   value: threatlevel,
                   onChanged: (value) {
                     setState(() {
                       threatlevel = value;
                     });
                   })
-            ]),
+            ),
           ),
         ],
       ),
