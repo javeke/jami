@@ -7,6 +7,7 @@ class SideDrawer extends StatefulWidget {
 
 class SideDrawerState extends State<SideDrawer> {
 bool livealert = false;
+String searchAddr = "";
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,7 +31,7 @@ bool livealert = false;
           ListTile(
             leading: Icon(Icons.access_time),
             title: Text('About'),
-          )
+          ),
         ],
       ),
     );

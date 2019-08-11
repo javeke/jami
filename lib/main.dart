@@ -115,6 +115,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -256,14 +257,15 @@ class _MyAppState extends State<MyApp> {
             height: 50.0,
             width: double.infinity,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0), color: Colors.white),
+                borderRadius: BorderRadius.circular(10.0), color: Colors.black26),
             child: TextField(
               decoration: InputDecoration(
                   hintText: 'Enter Address',
+                  hintStyle: TextStyle(color: Colors.black87),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(left: 15.0, top: 15.0),
                   suffixIcon: IconButton(
-                      icon: Icon(Icons.search),
+                      icon: Icon(Icons.search, color: Colors.black87),
                       onPressed: searchandNavigate,
                       iconSize: 30.0)),
               onChanged: (val) {
@@ -278,11 +280,12 @@ class _MyAppState extends State<MyApp> {
 
 
             Positioned(
-              top: 10,
+              top: 80,
               right: 10,
               child: FlatButton(
                 child: Icon(
                   Icons.person_pin,
+                  size: 40,
                   color: Colors.deepOrange,
                 ),
                 onPressed: _animateToPosition,
