@@ -26,6 +26,7 @@ dependencies:
   google_maps_flutter:
   firebase_core:
   firebase_messaging:
+  datetime_picker_formfield: ^0.1.8
 
 dev_dependencies:
   flutter_test:
