@@ -11,7 +11,6 @@ class UserInfo extends StatefulWidget {
 
 class UserInfoState extends State<UserInfo> {
   final Map userinfo;
-  String type;
   bool threatlevel = false;
   UserInfoState({@required this.userinfo});
 
