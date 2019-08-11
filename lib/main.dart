@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
   ScrollController controller = ScrollController();
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   CollectionReference incidents = Firestore.instance.collection('/incidents');
+  String token;
 
   static const LatLng _center = const LatLng(18, -76.8);
 
@@ -46,20 +47,20 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _onAddMarkerButtonPressed() {
-    setState(() {
-      _markers.add(Marker(
-        // This marker id can be anything that uniquely identifies each marker.
-        markerId: MarkerId(_lastMapPosition.toString()),
-        position: _lastMapPosition,
-        infoWindow: InfoWindow(
-          title: 'Wile Side Govament',
-          snippet: 'Bare gunman deh yah',
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(255),
-      ));
-    });
-  }
+  // void _onAddMarkerButtonPressed() {
+  //   setState(() {
+  //     _markers.add(Marker(
+  //       // This marker id can be anything that uniquely identifies each marker.
+  //       markerId: MarkerId(_lastMapPosition.toString()),
+  //       position: _lastMapPosition,
+  //       infoWindow: InfoWindow(
+  //         title: 'Wile Side Govament',
+  //         snippet: 'Bare gunman deh yah',
+  //       ),
+  //       icon: BitmapDescriptor.defaultMarkerWithHue(255),
+  //     ));
+  //   });
+  // }
 
   void _onCameraMove(CameraPosition position) {
     _lastMapPosition = position.target;
@@ -98,10 +99,46 @@ class _MyAppState extends State<MyApp> {
     );  
   }
 
+  void getFCMToken() async{
+    token = await firebaseMessaging.getToken();
+    await Firestore.instance.collection('tokens').add({'token':token});
+  }
+  
+
+  void getAlerts() async{
+    try{
+      if(incidents != null){
+      final queries = await incidents.getDocuments();
+      queries.documents.forEach((document){setState((){
+        _markers.add(Marker(
+          markerId: MarkerId(document.toString()),
+          position: LatLng(double.parse(document.data['location'].substring(7,12)),double.parse(document.data['location'].substring(26,31))),
+          infoWindow: InfoWindow(
+          title: document.data['type'],
+          snippet: document.data['details'],
+        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(document.data['markerColor']==null?0.0:double.parse(document.data['markerColor'])),
+        ));
+      });
+      });
+    }
+    }
+    catch(err){
+      print(err);
+    }
+    
+  }
+
+
   @override
   void initState() {
     super.initState();
     initializeFCM();
+    firebaseMessaging.getToken().then((token){
+      print(token);
+    });
+    getFCMToken();
+    getAlerts();
   }
 
 
@@ -120,13 +157,13 @@ class _MyAppState extends State<MyApp> {
             ),
             onPressed: _onMapTypeButtonPressed,
           ),
-          IconButton(
-            //color: Color(0xFF00ADEF),
-            icon: Icon(
-              Icons.add_location,
-            ),
-            onPressed: _onAddMarkerButtonPressed,
-          ),
+          // IconButton(
+          //   //color: Color(0xFF00ADEF),
+          //   icon: Icon(
+          //     Icons.add_location,
+          //   ),
+          //   onPressed: _onAddMarkerButtonPressed,
+          // ),
           PopupMenuButton(
             icon: Icon(Icons.arrow_drop_down),
             itemBuilder: (context) {
@@ -289,10 +326,23 @@ class _MyAppState extends State<MyApp> {
                         ));
                       });
                       await incidents.add({
+                        'token':token,
                         'location':data[3].toString(),
                         'type':data[1],
                         'details':data[0],
-                        'highthreatlevel': data[2]
+                        'highthreatlevel': data[2],
+                        'createdBy':token,
+                        'markerColor': data[1]=='Murder'? 
+                          0
+                          : data[1]=='Gang Violence'?
+                          43
+                          : data[1]=='Road Accident' ?
+                          86
+                          :data[1]=='Larceny' ?
+                          129 
+                          : data[1]=='Abduction' ?
+                          172
+                          :215
                       });
                     }
                     catch(err){
