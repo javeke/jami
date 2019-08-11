@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,10 +10,10 @@ class UserInfo extends StatefulWidget {
 
 class UserInfoState extends State<UserInfo> {
   final Map userinfo;
-  String displaytext = "   Alert Type";
+  String displaytext = "Alert Type";
   String details = "";
   String type = "";
-  var location;
+  LatLng location;
   bool threatlevel = false;
   UserInfoState({@required this.userinfo});
 
@@ -21,7 +22,7 @@ class UserInfoState extends State<UserInfo> {
 
   static const LatLng _center = const LatLng(45.521563, -122.677433);
 
-  Set<Marker> _marker = {};
+  Set<Marker> _marker = Set();
 
   LatLng _lastMapPosition = _center;
 
@@ -66,6 +67,33 @@ class UserInfoState extends State<UserInfo> {
   }
 
   void senddata() {
+    if(location==null){
+      Flushbar(
+        backgroundColor: Colors.deepOrange,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        messageText: Text('No location was selected'),
+      )..show(context);
+      return;
+    }
+    else if(type==null){
+      Flushbar(
+        backgroundColor: Colors.deepOrange,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        messageText: Text('Please select incident type'),
+      )..show(context);
+      return;
+    }
+    else if(details==null){
+      Flushbar(
+        backgroundColor: Colors.deepOrange,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        messageText: Text('Please add some incident details'),
+      )..show(context);
+      return;
+    }
     List alertdata = [details, type, threatlevel, location];
     Navigator.pop(context, alertdata);
   }
@@ -84,7 +112,6 @@ class UserInfoState extends State<UserInfo> {
               },
             )
           ],
-          backgroundColor: Color(0xFF00ADEF),
           title: Text(
             'New Alert',
             style: TextStyle(fontSize: 20.0),
@@ -115,12 +142,12 @@ class UserInfoState extends State<UserInfo> {
                 child: DropdownButton<String>(
               hint: Text(displaytext),
               items: <String>[
-                '    Abduction',
-                '    Assault',
-                '    Murder',
-                '    Larceny',
-                '    Gang Voilence',
-                '    Road Issues'
+                'Abduction',
+                'Assault',
+                'Murder',
+                'Larceny',
+                'Gang Voilence',
+                'Road Issues'
               ].map((String value) {
                 return new DropdownMenuItem<String>(
                   value: value,
@@ -138,7 +165,7 @@ class UserInfoState extends State<UserInfo> {
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
-                        child: TextField(
+            child: TextField(
               autocorrect: true,
               maxLines: 4,
               decoration: InputDecoration(
@@ -149,18 +176,16 @@ class UserInfoState extends State<UserInfo> {
                   contentPadding: EdgeInsets.all(14.0),
                   border: OutlineInputBorder()),
               onChanged: (string) {
-                setState(() {});
+                setState(() {
+                  details = string;
+                });
               },
             ),
           ),
           Padding(
             padding: EdgeInsets.all(14.0),
             child: ListTile(leading:
-              Text( "  High Threat Level",
-                style: TextStyle(
-                  color: Colors.black54,
-                ),
-              ),
+              Text( "High Threat Level"),
               trailing: Switch(
                   value: threatlevel,
                   onChanged: (value) {

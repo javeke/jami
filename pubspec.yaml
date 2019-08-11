@@ -26,6 +26,8 @@ dependencies:
   google_maps_flutter:
   firebase_core:
   firebase_messaging:
+  flushbar:
+  cloud_firestore:
 
 dev_dependencies:
   flutter_test:

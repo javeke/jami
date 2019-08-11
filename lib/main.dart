@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jam_i/createalert.dart';
 import 'package:jam_i/side_drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-// import 'package:location/location.dart';
 
 void main() => runApp(App());
 
@@ -27,7 +28,7 @@ class _MyAppState extends State<MyApp> {
   GoogleMapController _controller;
   ScrollController controller = ScrollController();
   FirebaseMessaging firebaseMessaging = FirebaseMessaging();
-  // Location location = Location();
+  CollectionReference incidents = Firestore.instance.collection('/incidents');
 
   static const LatLng _center = const LatLng(18, -76.8);
 
@@ -56,9 +57,6 @@ class _MyAppState extends State<MyApp> {
           snippet: 'Bare gunman deh yah',
         ),
         icon: BitmapDescriptor.defaultMarkerWithHue(255),
-        onTap: (){
-          
-        }
       ));
     });
   }
@@ -84,7 +82,12 @@ class _MyAppState extends State<MyApp> {
   void initializeFCM()async{
     firebaseMessaging.configure(
       onMessage: (message)async{
-        print(message);
+        Flushbar(
+          flushbarPosition: FlushbarPosition.TOP,
+          isDismissible: true,
+          duration: Duration(seconds: 3),
+          message: 'A new post was added',
+        )..show(context);
       },
       onLaunch: (notification) async{
         print(notification);
@@ -99,9 +102,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initializeFCM();
-    firebaseMessaging.getToken().then((token){
-      print(token);
-    });
   }
 
 
@@ -180,7 +180,7 @@ class _MyAppState extends State<MyApp> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Icon(Icons.tag_faces),
+                      Icon(Icons.warning),
                       SizedBox(width: 8,),
                         Text('Larceny')
                     ],
@@ -218,8 +218,7 @@ class _MyAppState extends State<MyApp> {
         children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(20)),
-            child:
-      GoogleMap(
+            child:GoogleMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
                 target: LatLng(18, -76.8),
@@ -257,11 +256,54 @@ class _MyAppState extends State<MyApp> {
                   color: Colors.deepOrange,
                   child: Text('Report'),
                   onPressed: () async {
-                    var data = await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (BuildContext context) { return UserInfo(userinfo: null,); })
-                    );
-                    print(data);
+                    try{
+                      var data = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (BuildContext context) { return UserInfo(userinfo: null,); })
+                      );
+
+                      if(data[3]==null || data[1]==null){
+                        return;
+                      }
+                      
+                      setState(() {
+                        _markers.add(Marker(
+                          // This marker id can be anything that uniquely identifies each marker.
+                          markerId: MarkerId(data.toString()),
+                          position: data[3],
+                          infoWindow: InfoWindow(
+                            title: data[1],
+                            snippet: data[0],
+                          ),
+                          icon: data[1]=='Murder'? 
+                          BitmapDescriptor.defaultMarkerWithHue(0)
+                          : data[1]=='Gang Violence'?
+                          BitmapDescriptor.defaultMarkerWithHue(43)
+                          : data[1]=='Road Accident' ?
+                          BitmapDescriptor.defaultMarkerWithHue(86)
+                          :data[1]=='Larceny' ?
+                          BitmapDescriptor.defaultMarkerWithHue(129) 
+                          : data[1]=='Abduction' ?
+                          BitmapDescriptor.defaultMarkerWithHue(172)
+                          : BitmapDescriptor.defaultMarkerWithHue(215)
+                        ));
+                      });
+                      await incidents.add({
+                        'location':data[3].toString(),
+                        'type':data[1],
+                        'details':data[0],
+                        'highthreatlevel': data[2]
+                      });
+                    }
+                    catch(err){
+                      print(err);
+                      Flushbar(
+                        flushbarPosition: FlushbarPosition.BOTTOM,
+                        duration: Duration(seconds: 3),
+                        message: 'Failed. Try again',
+                        isDismissible: true,
+                      )..show(context);
+                    }
                   }
                 )
               ],
