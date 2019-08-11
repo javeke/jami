@@ -2,6 +2,8 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jam_i/date_time.dart';
+
 class UserInfo extends StatefulWidget {
   final Map userinfo;
   UserInfo({@required this.userinfo});
@@ -209,6 +211,15 @@ class UserInfoState extends State<UserInfo> {
                   })
             ),
           ),
+          Padding(
+            padding: EdgeInsets.all(14.0),
+            child: new Column( 
+              children: <Widget>[
+                Text( "Select Relevant Date and Time", ),
+                new Container(child: new DateAndTime())
+              ]
+            ) 
+          ) 
         ],
       ),
     );
